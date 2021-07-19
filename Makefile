@@ -6,7 +6,7 @@
 #    By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/12 13:49:29 by adeburea          #+#    #+#              #
-#    Updated: 2021/07/16 13:52:40 by adeburea         ###   ########.fr        #
+#    Updated: 2021/07/19 16:19:40 by adeburea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 .PHONY: all clean fclean re
@@ -18,7 +18,7 @@ INC		=	pipex.h
 OBJ		=	objs
 OBJS	=	$(addprefix $(OBJ)/, $(SRCS:.c=.o))
 SRCS 	=	main.c \
-			libft.c
+			ft_strings.c
 
 $(NAME): $(LIBFT) $(OBJ) $(OBJS)
 	$(CC) $(FLAGS) -I$(INC) -o $(NAME) $(OBJS)
