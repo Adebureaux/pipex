@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 15:50:09 by adeburea          #+#    #+#             */
-/*   Updated: 2021/07/19 16:20:57 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/07/20 19:27:59 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-void	ft_putstr(char *s)
+void	ft_putstr(int fd, char *s)
 {
 	if (!s)
 		return ;
 	while (*s)
-		write(1, s++, 1);
+		write(fd, s++, 1);
 }
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)

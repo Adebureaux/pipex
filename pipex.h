@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 13:53:41 by adeburea          #+#    #+#             */
-/*   Updated: 2021/07/19 19:09:49 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/07/20 20:01:52 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@
 
 typedef struct s_pip
 {
-	char	*path;
+	char	**path;
+	int		path_nbr;
 	char	*file_1;
 	char	*file_2;
 	char	*cmd_1;
@@ -35,9 +36,18 @@ typedef struct s_pip
 }			t_pip;
 
 size_t	ft_strlen(const char *s);
-void	ft_putstr(char *s);
+void	ft_putstr(int fd, char *s);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	*ft_strdup(const char *s1);
+
+void	*ft_calloc(size_t count, size_t size);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
+char	*ft_substr(const char *s, unsigned int start, size_t len);
+char	*ft_strjoin(const char *s1, const char *s2);
+
+char	**ft_free_split(char **dst, int *char_nbr);
+char	**ft_split(const char *s, char c);
 
 #endif
