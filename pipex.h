@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 13:53:41 by adeburea          #+#    #+#             */
-/*   Updated: 2021/07/20 20:01:52 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:06:20 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,17 @@
 # include <string.h>
 # include <unistd.h>
 
-#define RED \033[0;31m
-#define GREEN \033[0;32m
+#define STDIN 1
+#define STDERR 2
 
 typedef struct s_pip
 {
 	char	**path;
-	int		path_nbr;
-	char	*file_1;
-	char	*file_2;
-	char	*cmd_1;
-	char	*cmd_2;
-	int		fd_1;
-	int		fd_2;
+	char	**cmd_in;
+	char	**cmd_out;
+	int		fd[2];
+	int		pipe_fd[2];
+	pid_t	pid;
 }			t_pip;
 
 size_t	ft_strlen(const char *s);

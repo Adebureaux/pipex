@@ -6,14 +6,14 @@
 #    By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/12 13:49:29 by adeburea          #+#    #+#              #
-#    Updated: 2021/07/20 19:27:35 by adeburea         ###   ########.fr        #
+#    Updated: 2021/07/22 14:31:26 by adeburea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 .PHONY: all clean fclean re
 
 CC		=	gcc
 NAME	=	pipex
-FLAGS	=	-Wall -Wextra -Werror
+FLAGS	=	-Wall -Wextra -g -fsanitize=address#-Werror
 INC		=	pipex.h
 OBJ		=	objs
 OBJS	=	$(addprefix $(OBJ)/, $(SRCS:.c=.o))

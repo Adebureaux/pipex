@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 13:53:30 by adeburea          #+#    #+#             */
-/*   Updated: 2021/07/21 02:11:34 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:13:31 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,52 +17,58 @@ void	quit(t_pip *pip, char *mes)
 	if (pip)
 	{
 		ft_free_split(pip->path, NULL);
-		free(pip->file_1);
-		free(pip->file_2);
-		free(pip->cmd_1);
-		free(pip->cmd_2);
-		if (pip->fd_1 != -1)
-			close(pip->fd_1);
-		if (pip->fd_2 != -1)
-			close(pip->fd_2);
+		if (pip->fd[0] != -1)
+			close(pip->fd[0]);
+		if (pip->fd[1] != -1)
+			close(pip->fd[1]);
 	}
-	ft_putstr(1, "\033[0;36mpipex:\e[0m ");
+	if (!mes)
+		exit(EXIT_SUCCESS);
+	ft_putstr(2, "\033[0;36mpipex:\e[0m ");
 	if (errno)
 	{
 		perror(mes);
 		exit(EXIT_FAILURE);
 	}
-	ft_putstr(1, mes);
-	exit(EXIT_SUCCESS);
+	ft_putstr(2, mes);
 }
 
-void	get_arg(t_pip *pip, char **av)
+void	execute_out(t_pip *pip, char *av)
 {
-	pip->file_1 = ft_strdup(av[1]);
-	pip->file_2 = ft_strdup(av[4]);
-	pip->cmd_1 = ft_strdup(av[2]);
-	pip->cmd_2 = ft_strdup(av[3]);
-	pip->fd_1 = open(pip->file_1, O_RDONLY);
-	if (pip->fd_1 == -1)
-		quit(pip, pip->file_1);
-	pip->fd_2 = open(pip->file_2, O_RDWR | O_CREAT, 0644);
-	if (pip->fd_2 == -1)
-		quit(pip, pip->file_2);
+	close(pip->pipe_fd[1]);
+	dup2(pip->pipe_fd[0], 0);
+	dup2(pip->fd[1], 1);
+	close(pip->pipe_fd[0]);
+	pip->cmd_out = ft_split(av, ' ');
 }
 
-void	get_path(t_pip *pip, char **ep)
+void	pipex(t_pip *pip, char **av, char **ep)
 {
-	int	i;
-
-	i = -1;
-	while (ep[++i])
+	while (*ep)
 	{
-		if (!ft_strncmp(ep[i], "PATH=", 5))
+		if (!ft_strncmp(*ep, "PATH=", 5))
 		{
-			pip->path = ft_split(&ep[i][5], ':');
-			return ;
+			pip->path = ft_split(&ep[0][5], ':');
+			break ;
 		}
+		ep++;
 	}
+	if (!pip->path || !pip->path[0])
+		quit(pip, "failed to get $PATH\n");
+	pip->fd[0] = open(av[1], O_RDONLY);
+	if (pip->fd[0] == -1)
+		quit(pip, av[1]);
+	pip->fd[1] = open(av[4], O_WRONLY | O_CREAT, 0644);
+	if (pip->fd[1] == -1)
+		quit(pip, av[4]);
+	if (pipe(pip->pipe_fd) == -1)
+		quit(pip, "failed to pipe\n");
+	pip->pid = fork();
+	if (pip->pid < 0)
+		quit(pip, "failed to fork\n");
+	if (pip->pid == 0)
+		execute_out(pip, av[3]);
+
 }
 
 int	main(int ac, char **av, char **ep)
@@ -71,8 +77,9 @@ int	main(int ac, char **av, char **ep)
 
 	if (ac != 5)
 		quit(NULL, "usage: ./pipex file1 cmd1 cmd2 file2\n");
-	get_path(&pip, ep);
-	get_arg(&pip, av);
-	//execv(pip->[at])
-	quit(&pip, "exited properly\n");
+	pip.path = NULL;
+	pip.cmd_in = NULL;
+	pip.cmd_out = NULL;
+	pipex(&pip, av, ep);
+	quit(&pip, NULL);
 }
