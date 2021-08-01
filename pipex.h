@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 13:53:41 by adeburea          #+#    #+#             */
-/*   Updated: 2021/07/22 16:06:20 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/07/29 23:56:00 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,13 @@ typedef struct s_pip
 	char	**path;
 	char	**cmd_in;
 	char	**cmd_out;
+	char	**path_in;
 	int		fd[2];
 	int		pipe_fd[2];
 	pid_t	pid;
 }			t_pip;
+
+extern char	**environ;
 
 size_t	ft_strlen(const char *s);
 void	ft_putstr(int fd, char *s);

@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 13:53:30 by adeburea          #+#    #+#             */
-/*   Updated: 2021/07/22 16:13:31 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/07/30 00:11:49 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,33 @@ void	quit(t_pip *pip, char *mes)
 	ft_putstr(2, mes);
 }
 
+void	get_path(t_pip *pip, char **cmd)
+{
+	int		i;
+	char	*temp;
+	char	*newpath;
+
+	i = 0;
+	while (pip->path[i])
+	{
+		temp = ft_strjoin(pip->path[i], "/");
+		newpath = ft_strjoin(temp, cmd[0]);
+		if (access(newpath, X_OK) != -1)
+		{
+			//execve(newpath, cmd, environ);
+			printf("FOUND %s\n", newpath);
+			//free(newpath);
+			//free(temp);
+			//ft_free_split(pip->path, NULL);
+			return ;
+		}
+		free(newpath);
+		free(temp);
+		i++;
+	}
+	quit(pip, "command not found\n");
+}
+
 void	execute_out(t_pip *pip, char *av)
 {
 	close(pip->pipe_fd[1]);
@@ -40,6 +67,9 @@ void	execute_out(t_pip *pip, char *av)
 	dup2(pip->fd[1], 1);
 	close(pip->pipe_fd[0]);
 	pip->cmd_out = ft_split(av, ' ');
+	// if (execve(pip->cmd_out[0], pip->cmd_out, environ) == -1)
+	// 	quit(pip, "invalid command\n");
+	get_path(pip, pip->cmd_out);
 }
 
 void	pipex(t_pip *pip, char **av, char **ep)
