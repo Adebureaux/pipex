@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 13:53:41 by adeburea          #+#    #+#             */
-/*   Updated: 2021/07/29 23:56:00 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/08/16 17:29:25 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,9 @@
 
 typedef struct s_pip
 {
-	char	**path;
-	char	**cmd_in;
-	char	**cmd_out;
-	char	**path_in;
+	char	*path;
+	char	**test_path;
+	char	**cmd[2];
 	int		fd[2];
 	int		pipe_fd[2];
 	pid_t	pid;
