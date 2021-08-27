@@ -6,16 +6,28 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 13:53:30 by adeburea          #+#    #+#             */
-/*   Updated: 2021/08/27 23:45:36 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/08/28 01:52:55 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+void	close_fd(t_pip *pip)
+{
+	close(pip->pipe[0]);
+	close(pip->pipe[1]);
+	close(pip->file[0]);
+	close(pip->file[1]);
+}
+
 void	quit(t_pip *pip, char *mes)
 {
 	if (!mes)
 		exit(EXIT_SUCCESS);
+	if (pip)
+	{
+		close_fd(pip);
+	}
 	ft_putstr(2, "\033[0;36mpipex:\e[0m ");
 	if (errno)
 		perror(mes);
@@ -24,7 +36,7 @@ void	quit(t_pip *pip, char *mes)
 	exit(EXIT_FAILURE);
 }
 
-char	**get_all_paths(t_pip *pip, char **ep)
+char	**get_all_paths(char **ep)
 {
 	while (*ep)
 	{
@@ -32,20 +44,24 @@ char	**get_all_paths(t_pip *pip, char **ep)
 			return (ft_split(&ep[0][5], ':'));
 		ep++;
 	}
-	quit(pip, "failed to get $PATH variable\n");
 	return (NULL);
 }
 
-char	*get_right_path(t_pip *pip, char **ep, char *cmd)
+char	*get_right_path(char **ep, char *cmd)
 {
 	int		i;
 	char	**all_paths;
 	char	*temp;
 	char	*path;
 
-	i = 0;
-	all_paths = get_all_paths(pip, ep);
-	while (all_paths[i])
+	i = -1;
+	while (*ep)
+	{
+		if (!ft_strncmp(*ep, "PATH=", 5))
+			all_paths = ft_split(&ep[0][5], ':');
+		ep++;
+	}
+	while (all_paths && all_paths[++i])
 	{
 		temp = ft_strjoin(all_paths[i], "/");
 		path = ft_strjoin(temp, cmd);
@@ -57,37 +73,31 @@ char	*get_right_path(t_pip *pip, char **ep, char *cmd)
 		}
 		free(path);
 		free(temp);
-		i++;
 	}
-	quit(pip, "command not found\n");
 	return (NULL);
 }
 
 void	execute_cmd1(t_pip *pip, char **av, char **ep)
 {
 	pip->cmd1 = ft_split(av[2], ' ');
-	pip->path1 = get_right_path(pip, ep, pip->cmd1[0]);
-	// First command
+	pip->path1 = get_right_path(ep, pip->cmd1[0]);
+	if (!pip->path1)
+		quit(pip, pip->cmd1[0]);
 	dup2(pip->pipe[1], STDOUT_FILENO);
 	dup2(pip->file[0], STDIN_FILENO);
-	close(pip->pipe[0]);
-	close(pip->pipe[1]);
-	close(pip->file[0]);
-	close(pip->file[1]);
+	close_fd(pip);
 	execve(pip->path1, pip->cmd1, ep);
 }
 
 void	execute_cmd2(t_pip *pip, char **av, char **ep)
 {
 	pip->cmd2 = ft_split(av[3], ' ');
-	pip->path2 = get_right_path(pip, ep, pip->cmd2[0]);
-	// Second command
+	pip->path2 = get_right_path(ep, pip->cmd2[0]);
+	if (!pip->path2)
+		quit(pip, pip->cmd2[0]);
 	dup2(pip->pipe[0], STDIN_FILENO);
 	dup2(pip->file[1], STDOUT_FILENO);
-	close(pip->pipe[0]);
-	close(pip->pipe[1]);
-	close(pip->file[0]);
-	close(pip->file[1]);
+	close_fd(pip);
 	execve(pip->path2, pip->cmd2, ep);
 }
 
@@ -106,18 +116,10 @@ int	main(int ac, char **av, char **ep)
 	if (pipe(pip.pipe) == -1)
 		quit(&pip, "failed to pipe\n");
 	pip.pid[0] = fork();
-	if (pip.pid[0] == -1)
-		return (1);
 	if (pip.pid[0] == 0)
 		execute_cmd1(&pip, av, ep);
 	pip.pid[1] = fork();
-	if (pip.pid[1] == -1)
-		return (1);
 	if (pip.pid[1] == 0)
 		execute_cmd2(&pip, av, ep);
-	close(pip.pipe[0]);
-	close(pip.pipe[1]);
-	waitpid(pip.pid[0], NULL, 0);
-	waitpid(pip.pid[1], NULL, 0);
 	quit(&pip, NULL);
 }
