@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 13:53:30 by adeburea          #+#    #+#             */
-/*   Updated: 2021/08/28 01:52:55 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/08/29 14:46:28 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,9 @@ void	close_fd(t_pip *pip)
 
 void	quit(t_pip *pip, char *mes)
 {
+	(void)pip;
 	if (!mes)
 		exit(EXIT_SUCCESS);
-	if (pip)
-	{
-		close_fd(pip);
-	}
 	ft_putstr(2, "\033[0;36mpipex:\e[0m ");
 	if (errno)
 		perror(mes);
@@ -74,12 +71,15 @@ char	*get_right_path(char **ep, char *cmd)
 		free(path);
 		free(temp);
 	}
+	ft_free_split(all_paths, NULL);
 	return (NULL);
 }
 
 void	execute_cmd1(t_pip *pip, char **av, char **ep)
 {
 	pip->cmd1 = ft_split(av[2], ' ');
+	if (!pip->cmd1 || !pip->cmd1[0])
+		quit(pip, "failed to split\n");
 	pip->path1 = get_right_path(ep, pip->cmd1[0]);
 	if (!pip->path1)
 		quit(pip, pip->cmd1[0]);
@@ -92,6 +92,8 @@ void	execute_cmd1(t_pip *pip, char **av, char **ep)
 void	execute_cmd2(t_pip *pip, char **av, char **ep)
 {
 	pip->cmd2 = ft_split(av[3], ' ');
+	if (!pip->cmd2 || !pip->cmd2[0])
+		quit(pip, "failed to split\n");
 	pip->path2 = get_right_path(ep, pip->cmd2[0]);
 	if (!pip->path2)
 		quit(pip, pip->cmd2[0]);

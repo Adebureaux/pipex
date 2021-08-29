@@ -6,7 +6,7 @@
 #    By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/12 13:49:29 by adeburea          #+#    #+#              #
-#    Updated: 2021/08/28 01:13:40 by adeburea         ###   ########.fr        #
+#    Updated: 2021/08/29 13:58:49 by adeburea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 .PHONY: all clean fclean re
@@ -23,13 +23,13 @@ SRCS 	=	main.c \
 			ft_utils.c
 
 $(NAME): $(LIBFT) $(OBJ) $(OBJS)
-	$(CC) $(FLAGS) -I$(INC) -o $(NAME) $(OBJS)
+	$(CC) $(FLAGS) -o $(NAME) $(OBJS)
 
 $(OBJ):
 	@mkdir -p $(OBJ)
 
 $(OBJ)/%.o: ./%.c
-	$(CC) $(FLAGS) -I$(INC) -c $< -o $@
+	$(CC) $(FLAGS) -c $< -o $@
 
 all: $(NAME)
 
