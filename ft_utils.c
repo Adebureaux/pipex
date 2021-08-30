@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/20 19:29:46 by adeburea          #+#    #+#             */
-/*   Updated: 2021/07/20 19:37:20 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/08/30 11:29:41 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	int		n;
-	void	*ret;
+	int				n;
+	void			*ret;
 	unsigned char	*ptr;
 
 	n = count * size;

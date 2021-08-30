@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/20 19:23:17 by adeburea          #+#    #+#             */
-/*   Updated: 2021/07/22 16:10:29 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/08/30 11:07:15 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char	**ft_free_split(char **dst, int *char_nbr)
 			free(dst[i++]);
 		free(dst);
 	}
+	dst = NULL;
 	return (NULL);
 }
 

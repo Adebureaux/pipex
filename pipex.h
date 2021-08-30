@@ -6,7 +6,7 @@
 /*   By: adeburea <adeburea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 13:53:41 by adeburea          #+#    #+#             */
-/*   Updated: 2021/08/27 23:44:55 by adeburea         ###   ########.fr       */
+/*   Updated: 2021/08/30 11:22:14 by adeburea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,11 @@
 
 typedef struct s_pip
 {
+	const char	*path[2];
+	char *const	*cmd[2];
 	int			pid[2];
 	int			file[2];
 	int			pipe[2];
-	const char	*path1;
-	const char	*path2;
-	char *const	*cmd2;
-	char *const	*cmd1;
 }			t_pip;
 
 size_t	ft_strlen(const char *s);
@@ -45,5 +43,8 @@ char	*ft_strjoin(const char *s1, const char *s2);
 
 char	**ft_free_split(char **dst, int *char_nbr);
 char	**ft_split(const char *s, char c);
+
+char	**get_all_paths(char **ep);
+char	*get_right_path(char **ep, char *cmd);
 
 #endif
